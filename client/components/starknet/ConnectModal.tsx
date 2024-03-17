@@ -21,6 +21,7 @@ const ConnectModal:FC<ModalProps> = ({open, setOpen}:ModalProps) => {
       </DialogTrigger>
       <DialogContent positionType="relative" paddingY={60} transformTranslateZ={200} sm={{ maxWidth: 425 }}>
         {connectors.map((connector: Connector) => {
+          console.log(connector.icon.dark)
           return (
             <Button
               key={connector.id}
@@ -33,6 +34,8 @@ const ConnectModal:FC<ModalProps> = ({open, setOpen}:ModalProps) => {
               { /* connector.icon.dark && (
                 <SvgIconFromText text={connector.icon.dark} svgHeight={100} svgWidth={100} />
               ) */}
+              <Image src={connector.icon.dark} marginRight={8} width={16} height={16} />
+
               <Text >Connect {connector.name}</Text>
             </Button>
           );
