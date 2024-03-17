@@ -1,39 +1,45 @@
-import { Connector, useConnect } from "@starknet-react/core";
-import React from "react";
+import { Connector, useConnect, useAccount } from "@starknet-react/core";
+import React, {FC} from "react";
 import { Button } from "../ui/button";
-import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
-import { Text, Image } from "@react-three/uikit";
+import { Dialog, DialogTrigger, DialogContent, useCloseDialog } from "../ui/dialog";
+import { Text, Image, Svg, SvgIconFromText } from "@react-three/uikit";
 
-export default function ConnectModal() {
+interface ModalProps {
+  open: boolean,
+  setOpen: (open: boolean) => void
+}
+
+const ConnectModal:FC<ModalProps> = ({open, setOpen}:ModalProps) => {
+  
   const { connect, connectors } = useConnect();
-
-  console.log(connectors);
-
   return (
-    <Dialog >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant="outline">
+        <Button backgroundColor="grey" variant="outline">
           <Text>Connect Wallet</Text>
         </Button>
       </DialogTrigger>
-      <DialogContent positionType="relative" transformTranslateZ={200} sm={{ maxWidth: 425 }}>
+      <DialogContent positionType="relative" paddingY={60} transformTranslateZ={200} sm={{ maxWidth: 425 }}>
         {connectors.map((connector: Connector) => {
           return (
             <Button
               key={connector.id}
-              onClick={async () =>
+              onClick={async () => {
                 connector.available() ? connect({ connector }) : null
+                setOpen(false)
+                }
               }
-              disabled={!connector.available()}
             >
-              {connector.icon.light && (
-                <Image src={connector.icon.dark} />
-              )}
+              { /* connector.icon.dark && (
+                <SvgIconFromText text={connector.icon.dark} svgHeight={100} svgWidth={100} />
+              ) */}
               <Text >Connect {connector.name}</Text>
             </Button>
           );
         })}
       </DialogContent>
     </Dialog>
-  );
+  )
 }
+
+export default ConnectModal
